@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import {NavbarComponent} from "@/components/NavbarComponent";
-
+import { NavbarComponent } from "@/components/NavbarComponent";
+import  Footer  from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,9 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body >
+      <body>
         <NavbarComponent />
         {children}
+        <Footer />
       </body>
     </html>
   );
