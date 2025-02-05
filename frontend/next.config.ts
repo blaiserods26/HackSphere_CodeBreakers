@@ -15,8 +15,5 @@ const nextConfig = {
   // port: '',
   // pathname: '/**',
 };
-module.exports = {
-  distDir: "out",
-};
 
 export default nextConfig;
