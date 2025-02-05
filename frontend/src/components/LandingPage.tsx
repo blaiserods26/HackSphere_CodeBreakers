@@ -17,7 +17,7 @@ export default function LandingPage() {
               Protect yourself from sophisticated email threats using our cutting-edge AI-powered detection system
             </p>
             <div className="flex gap-4">
-              <Button gradientDuoTone="cyanToBlue" size="xl">
+              <Button gradientDuoTone="cyanToBlue" size="lg">
                 Get Started
               </Button>
               <Button outline gradientDuoTone="cyanToBlue" size="xl">
