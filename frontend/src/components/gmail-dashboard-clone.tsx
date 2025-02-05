@@ -1,18 +1,30 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { Mail, Star, Inbox, FileText, Menu, X } from 'lucide-react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, DocumentData } from 'firebase/firestore';
 import { db } from '@/lib/firebase'; // Adjust the import path as necessary
 
+interface Email {
+  id: string;
+  sender: string;
+  subject: string;
+  time: string;
+  preview: string;
+  isRead: boolean;
+  isSelected: boolean;
+  isStarred: boolean;
+  safety: 'safe' | 'unsafe';
+}
+
 export default function GmailDashboard() {
-  const [emails, setEmails] = useState([]);
-  const [filter, setFilter] = useState('all');
+  const [emails, setEmails] = useState<Email[]>([]);
+  const [filter, setFilter] = useState<'all' | 'safe' | 'unsafe'>('all');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     const fetchEmails = async () => {
       const querySnapshot = await getDocs(collection(db, "emails"));
-      const emailsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const emailsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Email));
       setEmails(emailsData);
     };
 
@@ -26,7 +38,7 @@ export default function GmailDashboard() {
     })));
   };
 
-  const handleFilter = (safetyType) => {
+  const handleFilter = (safetyType: 'all' | 'safe' | 'unsafe') => {
     setFilter(safetyType);
   };
 
