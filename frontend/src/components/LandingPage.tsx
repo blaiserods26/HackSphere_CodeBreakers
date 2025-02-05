@@ -10,7 +10,7 @@ export default function LandingPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="lg:w-1/2 space-y-6">
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground dark:text-white bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500">
               Secure Your Inbox with Advanced Email Spoofing Detection
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300">
