@@ -5,6 +5,8 @@
       "name": "frontend",
       "dependencies": {
         "chartjs": "^0.3.24",
+        "dot": "^1.1.3",
+        "env": "^0.0.2",
         "firebase": "^11.2.0",
         "firebase-admin": "^13.0.2",
         "firebase-functions": "^6.3.1",
@@ -415,6 +417,8 @@
 
     "dlv": ["dlv@1.1.3", "", {}, "sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA=="],
 
+    "dot": ["dot@1.1.3", "", { "bin": { "dottojs": "./bin/dot-packer" } }, "sha512-/nt74Rm+PcfnirXGEdhZleTwGC2LMnuKTeeTIlI82xb5loBBoXNYzr2ezCroPSMtilK8EZIfcNZwOcHN+ib1Lg=="],
+
     "dunder-proto": ["dunder-proto@1.0.1", "", { "dependencies": { "call-bind-apply-helpers": "^1.0.1", "es-errors": "^1.3.0", "gopd": "^1.2.0" } }, "sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A=="],
 
     "duplexify": ["duplexify@4.1.3", "", { "dependencies": { "end-of-stream": "^1.4.1", "inherits": "^2.0.3", "readable-stream": "^3.1.1", "stream-shift": "^1.0.2" } }, "sha512-M3BmBhwJRZsSx38lZyhE53Csddgzl5R7xGJNk7CVddZD6CcmwMCH8J+7AprIrQKH7TonKxaCjcv27Qmf+sQ+oA=="],
@@ -430,6 +434,8 @@
     "encodeurl": ["encodeurl@2.0.0", "", {}, "sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg=="],
 
     "end-of-stream": ["end-of-stream@1.4.4", "", { "dependencies": { "once": "^1.4.0" } }, "sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q=="],
+
+    "env": ["env@0.0.2", "", {}, "sha512-yP8LfjO4ughSHD/3HgLPinWzexmaOGvRfs2TFx0SZhOm7j1xPi9evjuGcLiNVHIGLmcsgMak4eDbBzlYqGIVxw=="],
 
     "es-define-property": ["es-define-property@1.0.1", "", {}, "sha512-e3nRfgfUZ4rNGL232gUgX06QNyyez04KdjFrF+LTRoOXmrOgFKDg4BCdsjW8EnT69eqdYGmRpJwiPVYNrCaW3g=="],
 

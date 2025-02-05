@@ -7,7 +7,7 @@ const LandingPage = () => {
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-24">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
-          <div className="lg:w-1/2 space-y-8">
+          <div className="lg:w-1/2 space-y-2">
             <h1 className="text-5xl md:text-6xl font-bold text-[#003459] dark:text-[#FFFFFF] leading-tight">
               Secure Your Inbox with Advanced Email Spoofing Detection
             </h1>
@@ -15,13 +15,13 @@ const LandingPage = () => {
               Protect yourself from sophisticated email threats using our
               cutting-edge AI-powered detection system
             </p>
-            <div className="flex gap-6">
-              <Button className="bg-[#003459] hover:bg-[#003459]/90 text-[#FFFFFF] dark:bg-[#ADEBFF] dark:hover:bg-[#ADEBFF]/90 dark:text-[#003459] px-8 py-6 text-lg">
+            <div className="flex gap-8">
+              <Button className="bg-[#003459] hover:bg-[#003459]/90 text-[#FFFFFF] dark:bg-[#ADEBFF] dark:hover:bg-[#ADEBFF]/90 dark:text-[#003459]  text-lg">
                 Get Started
               </Button>
               <Button
                 outline={true}
-                className="border-[#003459] text-[#003459] hover:bg-[#ADEBFF]/20 dark:border-[#ADEBFF] dark:text-[#ADEBFF] dark:hover:bg-[#003459]/20 p-2 text-lg">
+                className="border-[#003459] text-[#003459] hover:bg-[#ADEBFF]/20 dark:border-[#ADEBFF] dark:text-[#ADEBFF] dark:hover:bg-[#003459]/20  text-lg">
                 Learn More
               </Button>
             </div>
