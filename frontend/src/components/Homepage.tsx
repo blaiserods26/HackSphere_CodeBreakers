@@ -67,13 +67,14 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent dark:bg-background">
+    
+    <div className="min-h-screen bg-background dark:bg-background">
       {/* Dashboard */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 bg-background dark:bg-background ">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Stats Section */}
-          <div className="space-y-6">
-            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-accent/20">
+          <div className="space-y-6 bg-background dark:bg-background">
+            <div className="bg-blue/40 backdrop-blur-lg rounded-xl p-6 border border-accent/20">
               <h2 className="text-2xl font-bold mb-4 text-foreground dark:text-foreground">
                 Scan Statistics
               </h2>
@@ -87,7 +88,7 @@ export default function HomePage() {
                   <Progress
                     progress={scanProgress}
                     size="lg"
-                    className="w-40 h-40 rounded-full bg-background dark:bg-slate-800 border border-accent/20"
+                    className="w-40 h-40 rounded-full bg-background dark:bg-slate-600 border border-accent/20"
                   />
                 </div>
               </div>

@@ -37,13 +37,13 @@ export const NavbarComponent = () => {
       <Navbar.Collapse>
         <Link
           href="/home"
-          className="flex items-center gap-2 text-foreground dark:bg-[#0a0a0a] dark:text-white hover:text-cyan-500 dark:hover:text-cyan-500">
+          className="flex items-center gap-2 text-black dark:bg-[#0a0a0a] dark:text-white hover:text-cyan-500 dark:hover:text-cyan-500">
           <HiHome className="w-5 h-5" />
           Home
         </Link>
         <Link
           href="/pricing"
-          className="flex items-center gap-2 text-foreground dark:bg-[#0a0a0a] dark:text-white hover:text-cyan-500 dark:hover:text-cyan-500">
+          className="flex items-center gap-2 text-black dark:bg-[#0a0a0a] dark:text-white hover:text-cyan-500 dark:hover:text-cyan-500">
           <HiCurrencyDollar className="w-5 h-5" />
           Pricing
         </Link>
