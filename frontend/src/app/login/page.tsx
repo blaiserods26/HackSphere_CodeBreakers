@@ -3,18 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { getAuth, signInWithPopup, GoogleAuthProvider, User, onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase'; // Import the initialized Firebase app
 import { Button, Card } from 'flowbite-react';
-import Router from 'next/navigation';
-
+import { useRouter } from 'next/navigation';
 
 const provider = new GoogleAuthProvider();
 
 const LoginPage = () => {
   const [userAuth, setUserAuth] = useState<User | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const listen = onAuthStateChanged(auth, (user: User | null) => {
       if (user) {
         setUserAuth(user);
+        router.push('/home'); // Redirect to /home if already logged in
       } else {
         setUserAuth(null);
       }
@@ -22,14 +23,14 @@ const LoginPage = () => {
     return () => {
       listen();
     };
-  }, []);
+  }, [router]);
 
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       // Handle successful login
       console.log(result.user);
-      Router.push('/home');
+      router.push('/home');
     } catch (error) {
       // Handle Errors here.
       console.error(error);
