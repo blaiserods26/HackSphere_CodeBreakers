@@ -1,14 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { google } from 'google-auth-library';
 import { OAuth2Client } from 'google-auth-library';
 import { setCookie } from 'nookies';
 
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
-const CLIENT_SECRETS_FILE = './credentials.json';
 
 const client = new OAuth2Client({
-  keyFile: CLIENT_SECRETS_FILE,
-  scopes: SCOPES,
+  clientId: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  redirectUri: process.env.GOOGLE_REDIRECT_URI,
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -33,6 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.redirect('/analyze-emails');
   } catch (error) {
-    res.status(500).send(`Error in OAuth callback: ${error.message}`);
+    const errorMessage = (error as Error).message;
+    res.status(500).send(`Error in OAuth callback: ${errorMessage}`);
   }
 }

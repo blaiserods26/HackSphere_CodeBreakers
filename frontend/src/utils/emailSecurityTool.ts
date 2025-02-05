@@ -1,4 +1,4 @@
-import { google } from 'googleapis';
+import { google, gmail_v1 } from 'googleapis';
 
 export async function analyzeEmails(auth: any) {
   const gmail = google.gmail({ version: 'v1', auth });
@@ -7,8 +7,8 @@ export async function analyzeEmails(auth: any) {
 
   const results = await Promise.all(
     messages.map(async (message) => {
-      const msg = await gmail.users.messages.get({ userId: 'me', id: message.id });
-      const emailData = msg.data;
+      const response = await gmail.users.messages.get({ userId: 'me', id: message.id });
+      const emailData = response.data as gmail_v1.Schema$Message;
       // Perform your email analysis here
       return {
         id: emailData.id,
