@@ -50,7 +50,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setIsLoading(true);
     
