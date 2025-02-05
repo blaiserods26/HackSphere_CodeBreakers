@@ -1,9 +1,7 @@
-
-import { Button, Card } from 'flowbite-react';
-import { Router } from 'react-router-dom';
+import { Button, Card } from "flowbite-react";
+import { Router } from "react-router-dom";
 
 const LandingPage = () => {
-   
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FFFFFF] to-[#ADEBFF] dark:from-[#00171F] dark:to-[#003459]">
       {/* Hero Section */}
@@ -33,9 +31,9 @@ const LandingPage = () => {
               <div className="absolute -inset-1 bg-gradient-to-r from-[#ADEBFF] to-[#003459] rounded-2xl blur opacity-25 animate-pulse"></div>
               <div className="relative bg-[#FFFFFF]/50 dark:bg-[#00171F]/50 rounded-2xl p-8 backdrop-blur-sm">
                 <img
-                  src="/api/placeholder/600/400"
+                  src="/email-security.png"
                   alt="Email Security"
-                  className="w-full h-auto rounded-xl shadow-lg"
+                  className="w-full h-auto rounded-xl "
                 />
               </div>
             </div>
@@ -88,38 +86,43 @@ const LandingPage = () => {
       </div>
     </div>
   );
-}
+};
 export default LandingPage;
 
 const features = [
   {
-    icon: '🔍',
-    title: 'Real-time Detection',
-    description: 'Instant analysis of incoming emails for spoofing attempts using advanced algorithms'
+    icon: "🔍",
+    title: "Real-time Detection",
+    description:
+      "Instant analysis of incoming emails for spoofing attempts using advanced algorithms",
   },
   {
-    icon: '🛡️',
-    title: 'AI-Powered Security',
-    description: 'Machine learning models trained to identify sophisticated phishing attempts'
+    icon: "🛡️",
+    title: "AI-Powered Security",
+    description:
+      "Machine learning models trained to identify sophisticated phishing attempts",
   },
   {
-    icon: '📊',
-    title: 'Detailed Analytics',
-    description: 'Comprehensive reports and insights about detected threats and patterns'
+    icon: "📊",
+    title: "Detailed Analytics",
+    description:
+      "Comprehensive reports and insights about detected threats and patterns",
   },
   {
-    icon: '🔐',
-    title: 'DMARC Integration',
-    description: 'Seamless integration with DMARC, SPF, and DKIM authentication protocols'
+    icon: "🔐",
+    title: "DMARC Integration",
+    description:
+      "Seamless integration with DMARC, SPF, and DKIM authentication protocols",
   },
   {
-    icon: '⚡',
-    title: 'Quick Response',
-    description: 'Immediate alerts and automated actions for suspicious emails'
+    icon: "⚡",
+    title: "Quick Response",
+    description: "Immediate alerts and automated actions for suspicious emails",
   },
   {
-    icon: '🔄',
-    title: 'Continuous Updates',
-    description: 'Regular updates to protection mechanisms against emerging threats'
-  }
+    icon: "🔄",
+    title: "Continuous Updates",
+    description:
+      "Regular updates to protection mechanisms against emerging threats",
+  },
 ];

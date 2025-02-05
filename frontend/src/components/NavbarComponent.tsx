@@ -7,12 +7,12 @@ export const NavbarComponent = () =>
   return (
     <Navbar
       fluid
-      className="bg-background/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-cyan-500/20">
+      className="bg-transparent dark:bg-slate-900/80 backdrop-blur-md border-b border-cyan-500/20">
       <Navbar.Brand
         as={Link}
         href="/">
         <img
-          src="/logo.svg"
+          src="/logo-light.svg"
           className="mr-3 h-6 sm:h-8"
           alt="EmailGuard Logo"
         />
@@ -25,7 +25,7 @@ export const NavbarComponent = () =>
         <DarkThemeToggle className="focus:ring-cyan-500" />
         <Link href="/profile">
           <Avatar
-            img="/profile-picture.jpg"
+            img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
             rounded
             status="online"
             statusPosition="bottom-right"
