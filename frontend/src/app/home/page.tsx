@@ -4,7 +4,7 @@ import GmailListDashboard from "../../components/gmaillistdashboard";
 const Home = () => {
   return (
     <>
-      <GmailDashboard />
+      {/* <GmailDashboard /> */}
       <GmailListDashboard />
     </>
   );

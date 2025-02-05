@@ -30,7 +30,9 @@ export default function GmailListDashboard() {
   useEffect(() => {
     const fetchEmailResults = async () => {
       try {
-        const response = await fetch("http://localhost:5000/analyze_emails");
+        const autho = await fetch("http://127.0.0.1:5000/authorize")
+
+        const response = await fetch("http://127.0.0.1:5000/analyze_emails");
         const data = await response.json();
         setEmailResults(data.results);
       } catch (error) {
