@@ -5,18 +5,6 @@ const nextConfig = {
   hostname: "firebasestorage.googleapis.com",
   port: "",
   pathname: "/**",
-  output: "export",
-  distDir: "out",
-  images: {
-    domains: ["firebasestorage.googleapis.com", "lh3.googleusercontent.com"],
-  },
-  // protocol: 'https',
-  //     hostname: 'lh3.googleusercontent.com',
-  // port: '',
-  // pathname: '/**',
-};
-module.exports = {
-  distDir: "out",
 };
 
 export default nextConfig;
