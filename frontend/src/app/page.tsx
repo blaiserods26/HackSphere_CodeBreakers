@@ -1,27 +1,52 @@
-"use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+
+interface Email {
+  id: string;
+  snippet: string;
+}
 
 export default function Home() {
-  const router = useRouter();
+  const { data: session } = useSession();
+  const [emails, setEmails] = useState<Email[]>([]);
 
   useEffect(() => {
-    // Redirect to landing page if not on home page
-    if (window.location.pathname === "/") {
-      router.push("/landing");
+    if (session) {
+      // Fetch emails when the session is available
+      fetch('/api/gmail')
+        .then((res) => res.json())
+        .then((data) => {
+          setEmails(data.emails);
+        });
     }
-  }, [router]);
+  }, [session]);
 
-  return (
-    <div>
-      <h1>Welcome to HackSphere CodeBreakers</h1>
-      <p>
-        <Link href="/landing">Go to Landing Page</Link>
-      </p>
-      <p>
-        <Link href="/">Go to Home Page</Link>
-      </p>
-    </div>
-  );
+  if (session) {
+    return (
+      <div>
+        <p>Signed in as {session.user?.email}</p>
+        <button onClick={() => signOut()}>Sign out</button>
+
+        <h2>Your Emails:</h2>
+        {emails.length > 0 ? (
+          <ul>
+            {emails.map((email) => (
+              <li key={email.id}>
+                <strong>{email.snippet}</strong>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Loading emails...</p>
+        )}
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <p>You are not signed in.</p>
+        <button onClick={() => signIn('google')}>Sign in with Google</button>
+      </div>
+    );
+  }
 }
