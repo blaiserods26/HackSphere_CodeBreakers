@@ -1,13 +1,12 @@
-"use client"
+"use client";
 import { Button, Navbar, Avatar, DarkThemeToggle } from "flowbite-react";
 import Link from "next/link";
 import { HiHome, HiCurrencyDollar } from "react-icons/hi";
-export const NavbarComponent = () => 
-{
+export const NavbarComponent = () => {
   return (
     <Navbar
       fluid
-      className="bg-transparent dark:bg-slate-900/80 backdrop-blur-md border-b border-cyan-500/20">
+      className="bg-white dark:bg-[#0a0a0a] backdrop-blur-md border-b border-cyan-500/20">
       <Navbar.Brand
         as={Link}
         href="/">
@@ -38,17 +37,17 @@ export const NavbarComponent = () =>
       <Navbar.Collapse>
         <Link
           href="/home"
-          className="flex items-center gap-2 text-foreground dark:text-white hover:text-cyan-500 dark:hover:text-cyan-500">
+          className="flex items-center gap-2 text-foreground dark:bg-[#0a0a0a] dark:text-white hover:text-cyan-500 dark:hover:text-cyan-500">
           <HiHome className="w-5 h-5" />
           Home
         </Link>
         <Link
           href="/pricing"
-          className="flex items-center gap-2 text-foreground dark:text-white hover:text-cyan-500 dark:hover:text-cyan-500">
+          className="flex items-center gap-2 text-foreground dark:bg-[#0a0a0a] dark:text-white hover:text-cyan-500 dark:hover:text-cyan-500">
           <HiCurrencyDollar className="w-5 h-5" />
           Pricing
         </Link>
       </Navbar.Collapse>
     </Navbar>
   );
-}
+};
