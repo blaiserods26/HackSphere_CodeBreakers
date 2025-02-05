@@ -15,6 +15,12 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from bs4 import BeautifulSoup
+import urllib.parse
 
 # Email configuration
 IMAP_SERVER = "imap.gmail.com"
@@ -23,6 +29,11 @@ EMAIL_ACCOUNT = "contineo.crce@gmail.com"
 EMAIL_PASSWORD = "omle qjyw vlgr cvyn"
 ALLOWED_DOMAIN = "@gmail.com"
 CHECK_INTERVAL = 5  # Check for new emails every 30 seconds
+
+# Gmail API configuration
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+CLIENT_SECRETS_FILE = "./credentials.json"  # You'll need to create this file
+API_KEY = "AIzaSyCEp3ZGODSMkSUXnecWTo8DXfdyRi_dVdQ"
 
 # Attachment handling configuration
 ATTACHMENT_SAVE_PATH = "./attachments"
@@ -282,6 +293,186 @@ class EmailSecurityAnalyzer:
             'dmarc': dmarc_result,
         }
 
+def analyze_links(email_body):
+    """Analyze links in email body for potential phishing."""
+    soup = BeautifulSoup(email_body, 'html.parser')
+    links = soup.find_all('a')
+    suspicious_links = []
+    
+    for link in links:
+        href = link.get('href')
+        if href:
+            # Check for common phishing indicators
+            suspicious = False
+            reasons = []
+            
+            # Check for IP addresses in URL
+            if re.search(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', href):
+                suspicious = True
+                reasons.append("Contains IP address")
+            
+            # Check for misleading domains
+            parsed_url = urllib.parse.urlparse(href)
+            if parsed_url.netloc:
+                if re.search(r'(paypal|google|microsoft|apple|amazon)', parsed_url.netloc, re.I):
+                    if not re.search(r'\.(com|net|org)$', parsed_url.netloc):
+                        suspicious = True
+                        reasons.append("Potentially spoofed domain")
+            
+            # Check for suspicious TLDs
+            if re.search(r'\.(xyz|tk|ml|ga|cf)$', href):
+                suspicious = True
+                reasons.append("Suspicious TLD")
+            
+            if suspicious:
+                suspicious_links.append({
+                    "url": href,
+                    "reasons": reasons
+                })
+    
+    return {
+        "total_links": len(links),
+        "suspicious_links": suspicious_links,
+        "risk_score": len(suspicious_links) * 25 if suspicious_links else 0
+    }
+
+def get_gmail_service(credentials_json):
+    """Get Gmail API service instance."""
+    try:
+        # Load credentials from the JSON passed from the website
+        credentials = Credentials.from_authorized_user_info(credentials_json, SCOPES)
+        
+        # If credentials are expired and can be refreshed, refresh them
+        if credentials and credentials.expired and credentials.refresh_token:
+            credentials.refresh(Request())
+            
+        service = build('gmail', 'v1', credentials=credentials)
+        return service
+    except Exception as e:
+        return {"error": f"Failed to build Gmail service: {str(e)}"}
+
+def process_email_content(service, message_id):
+    """Process email content and return analysis results."""
+    try:
+        # Get the email message
+        message = service.users().messages().get(userId='me', id=message_id, format='full').execute()
+        
+        # Extract email headers
+        headers = message['payload']['headers']
+        sender = next(h['value'] for h in headers if h['name'].lower() == 'from')
+        subject = next((h['value'] for h in headers if h['name'].lower() == 'subject'), 'No Subject')
+        
+        # Extract sender email
+        sender_email = re.search(r'<(.+?)>', sender)
+        sender_email = sender_email.group(1) if sender_email else sender
+        
+        # Initialize security analyzer
+        analyzer = EmailSecurityAnalyzer()
+        security_results = analyzer.comprehensive_email_security_analysis(sender_email)
+        
+        # Process email body
+        body = ""
+        if 'parts' in message['payload']:
+            for part in message['payload']['parts']:
+                if part['mimeType'] in ['text/plain', 'text/html']:
+                    body = base64.urlsafe_b64decode(part['body']['data']).decode()
+                    break
+        
+        # Analyze links in body
+        link_analysis = analyze_links(body)
+        
+        # Process attachments
+        attachment_results = {}
+        if 'parts' in message['payload']:
+            for part in message['payload']['parts']:
+                if 'filename' in part and part['filename']:
+                    filename = part['filename']
+                    if 'data' in part['body']:
+                        attachment_data = base64.urlsafe_b64decode(part['body']['data'])
+                    elif 'attachmentId' in part['body']:
+                        attachment = service.users().messages().attachments().get(
+                            userId='me', messageId=message_id, id=part['body']['attachmentId']
+                        ).execute()
+                        attachment_data = base64.urlsafe_b64decode(attachment['data'])
+                    
+                    # Save and scan attachment
+                    temp_path = os.path.join(ATTACHMENT_SAVE_PATH, "temp_" + filename)
+                    with open(temp_path, "wb") as f:
+                        f.write(attachment_data)
+                    
+                    is_safe, scan_details = scan_file_virustotal(temp_path)
+                    attachment_results[filename] = {
+                        "status": "Safe" if is_safe else "Suspicious",
+                        "details": scan_details
+                    }
+        
+        # Prepare JSON response
+        analysis_result = {
+            "email_info": {
+                "sender": sender,
+                "subject": subject,
+                "timestamp": message['internalDate']
+            },
+            "security_analysis": security_results,
+            "link_analysis": link_analysis,
+            "attachment_analysis": attachment_results,
+            "overall_risk_score": calculate_overall_risk(
+                security_results['overall_score'],
+                link_analysis['risk_score'],
+                len([a for a in attachment_results.values() if a['status'] == 'Suspicious'])
+            )
+        }
+        
+        return analysis_result
+        
+    except Exception as e:
+        return {"error": f"Failed to process email: {str(e)}"}
+
+def calculate_overall_risk(security_score, link_risk_score, suspicious_attachments):
+    """Calculate overall risk score."""
+    # Convert security score to risk (100 - security_score)
+    security_risk = 100 - security_score
+    
+    # Weight the components
+    weighted_security = security_risk * 0.4
+    weighted_links = link_risk_score * 0.3
+    weighted_attachments = (suspicious_attachments * 25) * 0.3
+    
+    total_risk = weighted_security + weighted_links + weighted_attachments
+    return min(100, total_risk)  # Cap at 100
+
+def analyze_emails(credentials):
+    """Main function to analyze emails and return results."""
+    try:
+        service = get_gmail_service(credentials)
+        if "error" in service:
+            return service
+        
+        # Get recent messages
+        results = service.users().messages().list(userId='me', maxResults=10).execute()
+        messages = results.get('messages', [])
+        
+        if not messages:
+            return {"message": "No emails found."}
+        
+        # Process each email
+        analysis_results = []
+        for message in messages:
+            result = process_email_content(service, message['id'])
+            analysis_results.append(result)
+        
+        return {
+            "status": "success",
+            "total_emails_analyzed": len(analysis_results),
+            "results": analysis_results
+        }
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e)
+        }
+
 def run_email_analysis_tool():
     """Interactive email analysis tool."""
     print("Email Security Analysis Tool")
@@ -400,7 +591,7 @@ def handle_attachment(part, filename, sender_email):
         os.rename(temp_path, final_path)
         print(f"File is clean: {scan_details}")
         return True
-    elif is_safe is False:
+    if is_safe is False:
         # Move to quarantine
         quarantine_path = os.path.join(QUARANTINE_PATH, filename)
         os.rename(temp_path, quarantine_path)
