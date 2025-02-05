@@ -30,7 +30,8 @@ const LoginPage = () => {
       const result = await signInWithPopup(auth, provider);
       // Handle successful login
       console.log(result.user);
-   
+      sessionStorage.setItem('token', '1');
+      router.push('/home');
     } catch (error) {
       // Handle Errors here.
       console.error(error);
