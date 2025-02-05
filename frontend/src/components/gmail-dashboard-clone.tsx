@@ -23,9 +23,10 @@ export default function GmailDashboard() {
 
   useEffect(() => {
     const fetchEmails = async () => {
-      const querySnapshot = await getDocs(collection(db, "emails"));
-      const emailsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Email));
-      setEmails(emailsData);
+      // const querySnapshot = await getDocs(collection(db, "emails"));
+      // const emailsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Email));
+      // setEmails(emailsData);
+      
     };
 
     fetchEmails();

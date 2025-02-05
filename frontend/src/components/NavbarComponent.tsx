@@ -6,7 +6,7 @@ export const NavbarComponent = () => {
   return (
     <Navbar
       fluid
-      className="bg-white dark:bg-[#0a0a0a] backdrop-blur-md border-b border-cyan-500/20">
+      className="bg-white dark:bg-gray-900 backdrop-blur-md border-b border-cyan-500/20">
       <Navbar.Brand
         as={Link}
         href="/">
