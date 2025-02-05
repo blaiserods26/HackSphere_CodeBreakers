@@ -10,7 +10,7 @@
 !.yarn/releases
 !.yarn/versions
 
-src/lib/firebase.ts
+src/lib/
 
 # testing
 /coverage
