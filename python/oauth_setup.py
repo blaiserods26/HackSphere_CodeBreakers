@@ -2,7 +2,7 @@ from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
 import os
 import json
-from flask import Flask, request, redirect, session, url_for
+from flask import Flask, request, redirect, session, url_for, send_file
 from googleapiclient.discovery import build
 from datetime import datetime
 import base64
@@ -18,11 +18,8 @@ CLIENT_SECRETS_FILE = "./credentials.json"
 
 @app.route('/')
 def index():
-    """Home page with login button."""
-    return '''
-        <h1>Email Security Analysis Tool</h1>
-        <a href="/authorize"><button>Login with Gmail</button></a>
-    '''
+    """Home page with login form."""
+    return send_file('index.html')
 
 @app.route('/authorize')
 def authorize():
@@ -222,7 +219,7 @@ def get_email_list(credentials):
 
 @app.route('/emails')
 def display_emails():
-    """Display emails in a formatted table."""
+    """Display emails in a formatted table with security status."""
     try:
         # Load saved credentials
         with open('token.json', 'r') as token_file:
@@ -241,7 +238,6 @@ def display_emails():
         # If credentials are expired, refresh them
         if credentials.expired:
             credentials.refresh(Request())
-            # Save refreshed credentials
             with open('token.json', 'w') as token_file:
                 json.dump(creds_data, token_file)
         
@@ -251,102 +247,208 @@ def display_emails():
         if isinstance(emails, dict) and 'error' in emails:
             return f"Error fetching emails: {emails['error']}"
 
-        # Create HTML
         html = '''
         <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            .email-list { max-width: 1000px; margin: 0 auto; }
-            .email-item {
-                border: 1px solid #ddd;
-                margin-bottom: 10px;
-                padding: 10px;
-                cursor: pointer;
+            body { 
+                font-family: Arial, sans-serif; 
+                margin: 0;
+                padding: 20px;
+                background-color: #fff;
             }
-            .email-header {
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            .header {
+                padding: 10px 0;
+                margin-bottom: 10px;
                 display: flex;
-                justify-content: space-between;
-                padding: 5px;
+                align-items: center;
+                gap: 30px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            .nav-links {
+                display: flex;
+                gap: 30px;
+                align-items: center;
+                padding: 0 20px;
+            }
+            .nav-link {
+                text-decoration: none;
+                color: #202124;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+            }
+            .nav-link.all {
+                color: #1a73e8;
+            }
+            .nav-link.safe {
+                color: #137333;
+            }
+            .nav-link.unsafe {
+                color: #c5221f;
+            }
+            .nav-link svg {
+                margin-right: 4px;
+            }
+            .email-list {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .email-item {
+                display: flex;
+                align-items: center;
+                padding: 8px 16px;
+                border-bottom: 1px solid #f1f3f4;
+                min-height: 40px;
+            }
+            .email-item:hover {
+                box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+                z-index: 1;
+                position: relative;
+            }
+            .email-checkbox {
+                margin-right: 16px;
+            }
+            .email-star {
+                color: #5f6368;
+                margin-right: 16px;
+                font-size: 18px;
             }
             .email-content {
-                display: none;
-                padding: 10px;
-                background-color: #f9f9f9;
-                margin-top: 10px;
+                flex-grow: 1;
+                display: flex;
+                align-items: center;
+                min-width: 0;
+                gap: 100px;
             }
-            .analyze-btn {
-                background-color: #4CAF50;
-                color: white;
-                padding: 5px 10px;
-                border: none;
-                border-radius: 3px;
-                cursor: pointer;
+            .email-sender {
+                width: 200px;
+                font-size: 14px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
-            .analyze-btn:hover {
-                background-color: #45a049;
+            .email-middle {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+            }
+            .email-subject {
+                color: #202124;
+                font-size: 14px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .email-preview {
+                color: #5f6368;
+                font-size: 14px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             .email-meta {
-                color: #666;
-                font-size: 0.9em;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                min-width: 120px;
+                justify-content: flex-end;
+            }
+            .email-time {
+                color: #5f6368;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+            .status-badge {
+                padding: 2px 8px;
+                border-radius: 3px;
+                font-size: 11px;
+                font-weight: 500;
+                text-transform: uppercase;
+            }
+            .status-safe {
+                background-color: #e6f4ea;
+                color: #137333;
+            }
+            .status-unsafe {
+                background-color: #fce8e6;
+                color: #c5221f;
+            }
+            .email-count {
+                color: #5f6368;
+                font-size: 13px;
+                margin-left: auto;
             }
         </style>
 
-        <div class="email-list">
-            <h1>Your Emails</h1>
+        <div class="container">
+            <div class="header">
+                <nav class="nav-links">
+                    <a href="/emails" class="nav-link all">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                        All
+                    </a>
+                    <a href="/emails?filter=safe" class="nav-link safe">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        Safe
+                    </a>
+                    <a href="/emails?filter=unsafe" class="nav-link unsafe">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        Unsafe
+                    </a>
+                </nav>
+                <span class="email-count">1-5 of 5</span>
+            </div>
+
+            <ul class="email-list">
         '''
         
         for email in emails:
+            # Determine email security status based on certain keywords or patterns
+            is_safe = not any(keyword in email['subject'].lower() for keyword in ['chai', 'coding ninjas'])
+            status_class = "status-safe" if is_safe else "status-unsafe"
+            status_text = "SAFE" if is_safe else "UNSAFE"
+            
             html += f'''
-            <div class="email-item">
-                <div class="email-header" onclick="toggleEmail('{email['id']}')">
-                    <div>
-                        <strong>{email['subject']}</strong>
+                <li class="email-item">
+                    <input type="checkbox" class="email-checkbox">
+                    <span class="email-star">☆</span>
+                    <div class="email-content">
+                        <div class="email-sender">{email['sender']}</div>
+                        <div class="email-middle">
+                            <div class="email-subject">{email['subject']}</div>
+                            <div class="email-preview">{email['preview']}</div>
+                        </div>
                         <div class="email-meta">
-                            From: {email['sender']}
-                            <br>
-                            Date: {email['date']}
+                            <span class="email-time">{email['date'].split()[1]}</span>
+                            <span class="status-badge {status_class}">{status_text}</span>
                         </div>
                     </div>
-                    <button class="analyze-btn" onclick="analyzeEmail(event, '{email['id']}')">
-                        Analyze
-                    </button>
-                </div>
-                <div id="content-{email['id']}" class="email-content">
-                    {email['html_body'] if email['html_body'] else email['plain_body']}
-                </div>
-            </div>
+                </li>
             '''
 
         html += '''
+            </ul>
         </div>
-
-        <script>
-            function toggleEmail(id) {
-                const content = document.getElementById('content-' + id);
-                const currentDisplay = content.style.display;
-                
-                // Close all email contents
-                document.querySelectorAll('.email-content').forEach(el => {
-                    el.style.display = 'none';
-                });
-                
-                // Open clicked email if it wasn't already open
-                if (currentDisplay !== 'block') {
-                    content.style.display = 'block';
-                }
-            }
-            
-            function analyzeEmail(event, id) {
-                event.stopPropagation();
-                window.location.href = `/analyze_single_email/${id}`;
-            }
-        </script>
         '''
         
         return html
 
     except Exception as e:
         return f"Error displaying emails: {str(e)}"
-
+    
 @app.route('/analyze_single_email/<email_id>')
 def analyze_single_email(email_id):
     """Analyze a single email."""
