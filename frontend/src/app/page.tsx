@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import LandingPage from "../components/LandingPage";
+
 
 export default function Home() {
   const router = useRouter();
@@ -15,7 +15,15 @@ export default function Home() {
   }, [router]);
 
   return (
-    
-    <LandingPage />
+
+    <div>
+      <h1>Welcome to HackSphere CodeBreakers</h1>
+      <p>
+        <Link href="/landing">Go to Landing Page</Link>
+      </p>
+      <p>
+        <Link href="/">Go to Home Page</Link>
+      </p>
+    </div>
   );
 }
