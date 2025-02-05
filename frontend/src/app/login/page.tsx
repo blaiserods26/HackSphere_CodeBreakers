@@ -30,7 +30,7 @@ const LoginPage = () => {
       const result = await signInWithPopup(auth, provider);
       // Handle successful login
       console.log(result.user);
-      router.push('/home');
+   
     } catch (error) {
       // Handle Errors here.
       console.error(error);
