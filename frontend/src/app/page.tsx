@@ -1,39 +1,27 @@
 "use client";
-// filepath: /d:/Projects/windows/HackSphere_CodeBreakers/frontend/pages/_app.js
-import "../styles/globals.css";
-import { useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { initializeApp } from "firebase/app";
-import { getAnalytics, isSupported } from "firebase/analytics";
+import { useEffect } from "react";
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
-  measurementId: "YOUR_MEASUREMENT_ID",
-};
-
-import type { AppProps } from "next/app";
-
-function MyApp({ Component, pageProps }: AppProps) {
+export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const app = initializeApp(firebaseConfig);
-
-    if (typeof window !== "undefined") {
-      isSupported().then((supported) => {
-        if (supported) {
-          getAnalytics(app);
-        }
-      });
+    // Redirect to landing page if not on home page
+    if (window.location.pathname === "/") {
+      router.push("/landing");
     }
-  }, []);
+  }, [router]);
 
-  return <Component {...pageProps} />;
+  return (
+    <div>
+      <h1>Welcome to HackSphere CodeBreakers</h1>
+      <p>
+        <Link href="/landing">Go to Landing Page</Link>
+      </p>
+      <p>
+        <Link href="/">Go to Home Page</Link>
+      </p>
+    </div>
+  );
 }
-
-export default MyApp;
