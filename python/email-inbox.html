@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Security Inbox</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #EBF4FF, #E6F0FF);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 1.5rem;
+        }
+
+        .compose-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0074c6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .compose-btn:hover {
+            background: #0066b2;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #666;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f0f9ff;
+            color: #0074c6;
+        }
+
+        .nav-item.active {
+            background: #f0f9ff;
+            color: #0074c6;
+        }
+
+        .main-content {
+            flex: 1;
+            background: white;
+        }
+
+        .email-list {
+            list-style: none;
+        }
+
+        .email-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+        .email-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .email-item:hover {
+            background: #f8fafc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .checkbox {
+            margin-right: 1rem;
+        }
+
+        .star-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #d1d5db;
+            margin-right: 1rem;
+            padding: 0.25rem;
+        }
+
+        .star-btn.starred {
+            color: #fbbf24;
+        }
+
+        .email-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .email-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .sender {
+            font-weight: 500;
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .subject {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .time {
+            color: #666;
+            font-size: 0.875rem;
+            margin-right: 1rem;
+        }
+
+        .safety-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .safety-badge.safe {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .safety-badge.unsafe {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .preview {
+            color: #666;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <button class="compose-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Compose
+            </button>
+
+            <div class="nav-item active" data-filter="all">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+                All
+            </div>
+
+            <div class="nav-item" data-filter="safe">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Safe
+            </div>
+
+            <div class="nav-item" data-filter="unsafe">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                Unsafe
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="email-header">
+                1-5 of 5
+            </div>
+            <div class="email-list">
+                <!-- Email items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample email data
+        const emails = [
+            {
+                id: 1,
+                sender: 'contineo.crce',
+                subject: 'Email Security Analysis - Score: 67/100',
+                preview: 'Dear Sender, Thank you for reaching out! We have performed a security analysis...',
+                time: '14:41',
+                isStarred: false,
+                isSafe: true
+            },
+            {
+                id: 2,
+                sender: 'contineo.crce',
+                subject: 'Thank You for Your Email!',
+                preview: 'Dear Sender, Thank you for reaching out! We have received your message and performed a security...',
+                time: '14:40',
+                isStarred: false,
+                isSafe: true
+            },
+            {
+                id: 3,
+                sender: 'Zomato',
+                subject: 'chaichaichaichaichaichaichai',
+                preview: '---------- Forwarded message ---------- From: Zomato <noreply@mailers.zomato.com> Da...',
+                time: '12:31',
+                isStarred: false,
+                isSafe: false
+            },
+            {
+                id: 4,
+                sender: 'Coding',
+                subject: 'Update: Submit your application to complete your certification',
+                preview: '---------- Forwarded message ---------- From: Coding Ninjas ...',
+                time: '12:15',
+                isStarred: false,
+                isSafe: false
+            },
+            {
+                id: 5,
+                sender: 'Contineo Support',
+                subject: 'Hello Ross',
+                preview: 'Ross',
+                time: '11:43',
+                isStarred: false,
+                isSafe: true
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        // Function to render emails
+        function renderEmails() {
+            const emailList = document.querySelector('.email-list');
+            const filteredEmails = emails.filter(email => {
+                if (currentFilter === 'safe') return email.isSafe;
+                if (currentFilter === 'unsafe') return !email.isSafe;
+                return true;
+            });
+
+            emailList.innerHTML = filteredEmails.map(email => `
+                <div class="email-item" data-id="${email.id}">
+                    <input type="checkbox" class="checkbox">
+                    <button class="star-btn ${email.isStarred ? 'starred' : ''}" onclick="toggleStar(${email.id})">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="${email.isStarred ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </button>
+                    <div class="email-content">
+                        <div class="email-top">
+                            <span class="sender">${email.sender}</span>
+                            <span class="subject">${email.subject}</span>
+                            <span class="time">${email.time}</span>
+                            <span class="safety-badge ${email.isSafe ? 'safe' : 'unsafe'}">
+                                ${email.isSafe ? 'SAFE' : 'UNSAFE'}
+                            </span>
+                        </div>
+                        <div class="preview">${email.preview}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update email count
+            document.querySelector('.email-header').textContent = 
+                `${filteredEmails.length > 0 ? '1' : '0'}-${filteredEmails.length} of ${filteredEmails.length}`;
+        }
+
+        // Function to toggle star
+        function toggleStar(id) {
+            const email = emails.find(e => e.id === id);
+            if (email) {
+                email.isStarred = !email.isStarred;
+                renderEmails();
+            }
+        }
+
+        // Add click handlers for filter buttons
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Update active state
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                item.classList.add('active');
+
+                // Update filter and re-render
+                currentFilter = item.dataset.filter;
+                renderEmails();
+            });
+        });
+
+        // Initial render
+        renderEmails();
+    </script>
+</body>
+</html>
