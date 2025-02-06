@@ -1,3 +1,4 @@
+"use client";
 const Pricing = () => {
   return (
     <section className="py-12 bg-gray-100 dark:bg-gray-900">
