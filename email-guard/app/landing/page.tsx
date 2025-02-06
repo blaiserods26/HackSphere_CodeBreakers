@@ -1,5 +1,6 @@
 import next from "next";
 import Image from "next/image";
+import { NavbarComponent } from "@/src/components/NavbarComponent";
 
 const features = [
   {
@@ -42,6 +43,8 @@ const features = [
 
 const LandingPage = () => {
   return (
+    <div>
+    <NavbarComponent></NavbarComponent>
     <div className="min-h-screen bg-gradient-to-b from-[#FFFFFF] to-[#ADEBFF] dark:from-[#00171F] dark:to-[#003459]">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-24">
@@ -70,6 +73,8 @@ const LandingPage = () => {
                 <Image
                   src="/email-security.png"
                   alt="Email Security"
+                  width={500} // Add width
+                  height={500} // Add height
                   className="w-full h-auto rounded-xl"
                 />
               </div>
@@ -121,6 +126,7 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

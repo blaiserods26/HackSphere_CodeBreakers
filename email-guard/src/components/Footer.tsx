@@ -1,47 +1,17 @@
 "use client";
 const Footer = () => {
   return (
-    <footer className="relative bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow-sm md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
-      <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-        © 2023{" "}
-        <a
-          href="https://flowbite.com/"
-          className="hover:underline">
-          Flowbite™
-        </a>
-        . All Rights Reserved.
-      </span>
-      <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-        <li>
-          <a
-            href="#"
-            className="hover:underline me-4 md:me-6">
-            About
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            className="hover:underline me-4 md:me-6">
-            Privacy Policy
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            className="hover:underline me-4 md:me-6">
-            Licensing
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            className="hover:underline">
-            Contact
-          </a>
-        </li>
-      </ul>
-    </footer>
+    <div className="bg-gray-800 text-white p-4 md:flex md:justify-between">
+      <div className="mb-4 md:mb-0">
+        <h2 className="text-lg font-bold">Company Name</h2>
+        <p className="text-sm">© 2023 Company Name. All rights reserved.</p>
+      </div>
+      <div className="flex space-x-4">
+        <a href="#" className="text-sm hover:underline">Privacy Policy</a>
+        <a href="#" className="text-sm hover:underline">Terms of Service</a>
+        <a href="#" className="text-sm hover:underline">Contact Us</a>
+      </div>
+    </div>
   );
 };
 export default Footer;
