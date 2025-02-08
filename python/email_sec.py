@@ -38,7 +38,7 @@ API_KEY = "AIzaSyCEp3ZGODSMkSUXnecWTo8DXfdyRi_dVdQ"
 # Attachment handling configuration
 ATTACHMENT_SAVE_PATH = "./attachments"
 QUARANTINE_PATH = "./quarantine"
-VT_API_KEY = "1b817d672b36edeb26c65ce8e63836a1bf37d936bceb9fb27e07e53272d31366"
+VT_API_KEY = ""
 VT_API_ENDPOINT = "https://www.virustotal.com/vtapi/v2/file/report"
 
 # Ensure directories exist
