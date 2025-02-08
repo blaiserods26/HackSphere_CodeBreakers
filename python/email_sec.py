@@ -26,14 +26,14 @@ import urllib.parse
 IMAP_SERVER = "imap.gmail.com"
 SMTP_SERVER = "smtp.gmail.com"
 EMAIL_ACCOUNT = "contineo.crce@gmail.com"
-EMAIL_PASSWORD = "omle qjyw vlgr cvyn"
+EMAIL_PASSWORD = ""
 ALLOWED_DOMAIN = "@gmail.com"
 CHECK_INTERVAL = 5  # Check for new emails every 30 seconds
 
 # Gmail API configuration
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 CLIENT_SECRETS_FILE = "./credentials.json"  # You'll need to create this file
-API_KEY = "AIzaSyCEp3ZGODSMkSUXnecWTo8DXfdyRi_dVdQ"
+API_KEY = ""
 
 # Attachment handling configuration
 ATTACHMENT_SAVE_PATH = "./attachments"
