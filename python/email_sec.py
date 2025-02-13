@@ -25,8 +25,8 @@ import urllib.parse
 # Email configuration
 IMAP_SERVER = "imap.gmail.com"
 SMTP_SERVER = "smtp.gmail.com"
-EMAIL_ACCOUNT = "contineo.crce@gmail.com"
-EMAIL_PASSWORD = ""
+EMAIL_ACCOUNT = "spamout.service@gmail.com"
+EMAIL_PASSWORD = "izhv rqak hzjw uejx"
 ALLOWED_DOMAIN = "@gmail.com"
 CHECK_INTERVAL = 5  # Check for new emails every 30 seconds
 
